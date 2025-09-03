@@ -1,36 +1,53 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { MdOutlineEditNote } from "react-icons/md";
 import { FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
+
 
 
 function TodoList() {
-  const dummyData = [
-    {
-      task: "Buy Groceries",
-      description: "Purchase vegetables, fruits, and milk",
-      category: "Personal",
-      when: "2025-09-03 10:00 AM",
-      priority: "High",
-      fulfillment: "Pending",
-    },
-    {
-      task: "Team Meeting",
-      description: "Discuss project progress with the development team",
-      category: "Work",
-      when: "2025-09-04 02:00 PM",
-      priority: "Medium",
-      fulfillment: "Scheduled",
-    },
-    {
-      task: "Doctor Appointment",
-      description: "Annual health check-up",
-      category: "Health",
-      when: "2025-09-05 09:30 AM",
-      priority: "High",
-      fulfillment: "Confirmed",
-    },
-  ];
+   const [todo, setTodo] = useState([]);
+
+   useEffect(() => {
+    fetchTodo();
+   }, []);
+
+   const fetchTodo = async () => {
+    try {
+      const res = await axios.get("http://localhost:8080/api/todo/");
+      setTodo(res.data);
+    } catch (err) {
+      console.error("Error fetching todo:", err);
+    }
+   };
+
+  // const dummyData = [
+  //   {
+  //     task: "Buy Groceries",
+  //     description: "Purchase vegetables, fruits, and milk",
+  //     category: "Personal",
+  //     when: "2025-09-03 10:00 AM",
+  //     priority: "High",
+  //     fulfillment: "Pending",
+  //   },
+  //   {
+  //     task: "Team Meeting",
+  //     description: "Discuss project progress with the development team",
+  //     category: "Work",
+  //     when: "2025-09-04 02:00 PM",
+  //     priority: "Medium",
+  //     fulfillment: "Scheduled",
+  //   },
+  //   {
+  //     task: "Doctor Appointment",
+  //     description: "Annual health check-up",
+  //     category: "Health",
+  //     when: "2025-09-05 09:30 AM",
+  //     priority: "High",
+  //     fulfillment: "Confirmed",
+  //   },
+  // ];
 
   return (
     <div style={{ padding: "12px 24px" }}>
@@ -67,7 +84,9 @@ function TodoList() {
               width: "40%",
             }}
           >
+            <Link to="/todo">
             <span>Add a new to-do</span>
+            </Link>
           </div>
 
           <div
@@ -131,12 +150,12 @@ function TodoList() {
             </tr>
           </thead>
           <tbody>
-            {dummyData.map((item, index) => (
-              <tr key={index}>
+            {todo.map((item) => (
+              <tr key={item._id}>
                 <td>{item.task}</td>
                 <td>{item.description}</td>
                 <td>{item.category}</td>
-                <td>{item.when}</td>
+                <td>{item.date} {item.time}</td>
                 <td>{item.priority}</td>
                 <td>{item.fulfillment}</td>
                 <td style={{ display: "flex", gap: "10px" }}>

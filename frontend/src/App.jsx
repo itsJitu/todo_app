@@ -1,26 +1,26 @@
 import { useState } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
-import TodoList from './Component/TodoList'
-import First from './Component/First'
-import Todo from './Component/Todo'
+import TodoListt from './Component/TodoListt'
+import Firstt from './Component/First'
+import Todoo from './Component/Todoo'
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <First />,
+    element: <Firstt />,
     children: [
       {
         index: true,
-        element: <TodoList />
+        element: <TodoListt />
       },
       {
-        path: '/Todo',
-        element: <Todo />
+        path: '/todo',
+        element: <Todoo />
       },
       {
-        path: '/TodoList',
-        element: <TodoList /> 
+        path: '/todoList',
+        element: <TodoListt /> 
       },
     ]
   }
