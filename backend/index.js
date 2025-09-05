@@ -1,39 +1,26 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const dotenv = require("dotenv");
-require("dotenv/config");
-
+require("dotenv").config();
 
 const app = express();
-app.use(cors());
-
-const PortNo = process.env.PORT_NO || 8080;
-const MONGOOSE_URL = process.env.MONGOOSE_URL;
-const FRONTEND_URL = process.env.FRONTEND_URL;
-
-const corsOption = {
-    origin: FRONTEND_URL,
-    methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "HEAD", "OPTIONS"]
-}
-
 app.use(express.json());
+
+// CORS setup
+const corsOption = {
+  origin: process.env.FRONTEND_URL || "*",
+  methods: ["GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"]
+};
 app.use(cors(corsOption));
 
+// Connect MongoDB
+mongoose.connect(process.env.MONGOOSE_URL)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("MongoDB Error:", err));
 
-// Connect to MongoDB
-mongoose
-.connect(MONGOOSE_URL)
-.then(() => {
-    console.log("db connected");
-})
-
-.catch((error) => {
-    console.log(error);
-
-})
 // Routes
- const addTask = require("./routes/todo.routes");
-   app.use("/api/todo", addTask);
+const todoRoutes = require("./routes/todo.routes");
+app.use("/api/todo", todoRoutes);
 
-app.listen(PortNo, () => console.log(`server is up & running at ${PortNo}`));
+const PORT = process.env.PORT_NO || 8080;
+app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
